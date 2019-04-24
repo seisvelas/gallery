@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Toy Chest</title>
+  <link rel="stylesheet" href="css/chessboard-0.3.0.min.css">
+  <link rel="stylesheet"
+      href="css/prism.css">
+<script src="js/prism.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script src="js/chessboard-0.3.0.min.js"></script>
+  <script src="js/eightQueensSolutions.js"></script>
+  <script src="js/clockAngle.js"></script>
+  <style>
+    body {
+      font-size: 8
+    }
+  code {
+    letter-spacing: normal;
+}
+
+.main {
+    display: flex;
+    padding: 2em;
+    height: 90vh;
+    justify-content: center;
+    align-items: middle;
+}
+
+.clockbox,
+#clock {
+    width: 100%;
+}
+
+/* Clock styles */
+.circle {
+    fill: none;
+    stroke: #000;
+    stroke-width: 9;
+    stroke-miterlimit: 10;
+}
+
+.mid-circle {
+    fill: #000;
+}
+.hour-marks {
+    fill: none;
+    stroke: #000;
+    stroke-width: 9;
+    stroke-miterlimit: 10;
+}
+
+.codey {
+  margin-top: 30px;
+}
+
+.hour-arm {
+    fill: none;
+    stroke: #000;
+    stroke-width: 17;
+    stroke-miterlimit: 10;
+}
+
+.minute-arm {
+    fill: none;
+    stroke: #000;
+    stroke-width: 11;
+    stroke-miterlimit: 10;
+}
+
+.second-arm {
+    fill: none;
+    stroke: #000;
+    stroke-width: 4;
+    stroke-miterlimit: 10;
+}
+
+/* Transparent box ensuring arms center properly. */
+.sizing-box {
+    fill: none;
+}
+
+/* Make all arms rotate around the same center point. */
+/* Optional: Use transition for animation. */
+#hour,
+#minute,
+#second {
+    transform-origin: 300px 300px;
+    /*transition: transform .5s ease-in-out;*/
+}
+  </style>
+</head>
+
+<body>
+  <div style="width:500px;margin:auto;letter-spacing: 0.1em;">
+    <div style="font-size: 500%">~</div>
+    A gallery of fun toy problems I did at Holacode <p>
+      Beneath each snippet is a link to a gist containing my other solutions
+    </p>
+    <hr>
+    <h1>8 Queens</h1>
+    <p>
+      <div width="500px; overflow:hidden">
+      Given an 8 x 8 board, find all the ways you can  
+      place 8 queens on the board 
+      such that none of  
+      them are threatened.
+
+    </p>
+    <div id="board" style="width: 500px;margin-top: 30px;margin-bottom: 30px"></div><p>
+    Instead of the conventional backtracking approach, 
+    this is a pure, functional implementation with no global state.
+    <div class="codey"></div><pre><code class="language-javascript">var {range} = require('range')
+          
+function isThreatened(board, pos) {
+  return board.includes(pos) ||
+         board.filter((e, i, a) =>
+           a.length - i === Math.abs(e - pos)
+         ).length
+}
+        
+function nqueens(n, board=[]) {
+  let moves = range(n).filter(e=>
+    !isThreatened(board, e)
+  )
+          
+  return board.length === n - 1
+    ? moves
+    : moves.map((m, i, a)=>
+        nqueens(n, a.concat([m])).map(sol=>
+          [m].concat(sol)
+        )
+      ).reduce((acc, cur) => acc.concat(cur), []);
+}
+        
+  console.log(nqueens(8))  
+    </code></pre></div>
+    Other versions: <a href="https://gist.github.com/seisvelas/944e873f50abe89498b93db62278d2dd">seisvelas@gist.github/nqueens</a>
+<div style="margin-top:50px">
+<hr>
+    <h1>Clock Hands</h1>
+    Given a time, find the inner angle between the minute
+    and hour hands at that time.
+    <div class="clockbox" style="margin-bottom: 0%">
+      <div style="text-align: center; margin-bottom: 0%" id="time"></div>
+      <svg id="clock" xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 600 600">
+          <g id="face">
+              <circle class="circle" cx="300" cy="300" r="253.9"/>
+              <path class="hour-marks" d="M300.5 94V61M506 300.5h32M300.5 506v33M94 300.5H60M411.3 107.8l7.9-13.8M493 190.2l13-7.4M492.1 411.4l16.5 9.5M411 492.3l8.9 15.3M189 492.3l-9.2 15.9M107.7 411L93 419.5M107.5 189.3l-17.1-9.9M188.1 108.2l-9-15.6"/>
+              <circle class="mid-circle" cx="300" cy="300" r="16.2"/>
+          </g>
+          <g id="hour">
+              <path class="hour-arm" d="M300.5 298V142"/>
+              <circle class="sizing-box" cx="300" cy="300" r="253.9"/>
+          </g>
+          <g id="minute">
+              <path class="minute-arm" d="M300.5 298V67"/>
+              <circle class="sizing-box" cx="300" cy="300" r="253.9"/>
+          </g>
+          <g id="second">
+              <path class="second-arm" d="M300.5 350V55"/>
+              <circle class="sizing-box" cx="300" cy="300" r="253.9"/>
+          </g>
+      </svg>
+      <center><span id="clock-angle" style="margin-top: 0%"></span></center>
+
+  </div><!-- .clockbox -->
+  </div>
+  Lorenzo, one of the volunteer mentors at holacode,
+  taught us this problem. He said it was given to him during his
+  interview at Uber. <p>
+    Below is my solution in Common Lisp. The Scheme version uses a macro so you can enter the time as-is. So <span class="hour"></span>:<span class="minute"></span>
+    instead of the string literal <font color="green">"<span class="hour"></span>:<span class="minute"></span>"</font>
+    (like my Python version) or two integers like the version below.
+  </p>
+  <div class="codey">
+      <pre><code class="language-lisp">(defmacro hour->min (hour @ min)
+  `(* 5 (+ (mod hour 12) 
+        (/ min 60))))
+          
+(defun clock∠ (hour min)
+  (let ((° (abs (- min (hour->min hour @ min)))))
+    (* 6 (min ° (- 360 °)))))
+          
+(write (clock∠ 2 20))
+</code></pre>
+Other versions: <a href="https://gist.github.com/seisvelas/43a62d8e5f392067e98895515e9d9438">seisvelas@gist.github/clock</a>
+  </div>
+
+
+
+<!-- CONTINUE HERE -->
+
+
+  </div>
+  
+</div>
+  <script>
+     var date = new Date();
+ let hro = date.getHours();
+ hro= hro > 12 ? hro - 12 : hro;
+ let mino = date.getMinutes();
+ let seco = date.getSeconds()
+
+var doc = document.getElementsByTagName('code')[1]
+ var doc_code = document.getElementsByTagName('code')[1].innerHTML.split("\n")
+ console.log(doc_code)
+ var new_html = []
+for (let i = 0; i < doc_code.length; i++) {
+  if (doc_code[i].includes("write")) {
+    new_html.push(`(write (clock∠ ${hro} ${mino}))`)
+  } else {
+    new_html.push(doc_code[i])
+  }
+}
+
+doc.innerHTML = new_html.join('\n')
+    // 8 queens
+    function draw(boardViz, board) {
+      boardViz.position(board.map((e, i) => {
+        return (e === 0) ? "" : e;
+      }).join("q/") + "q")
+    }
+    var boardViz = ChessBoard('board', '');
+    i = 0;
+    setInterval(function () {
+      draw(boardViz, solutions[i++ % solutions.length]);
+    }, 1000);
+    const HOURHAND = document.querySelector('#hour');
+const MINUTEHAND = document.querySelector('#minute');
+const SECONDHAND = document.querySelector('#second');
+
+var date = new Date();
+ let hr = date.getHours();
+ let min = date.getMinutes();
+ let sec = date.getSeconds();
+
+ var lol = document.getElementsByClassName('hour')
+ for (let i = 0; i < lol.length; i++) {
+   lol[i].innerHTML = hr>12?hr%12:hr
+ }
+ lol = document.getElementsByClassName('minute')
+ for (let i = 0; i < lol.length; i++) {
+   lol[i].innerHTML = min < 10 ? "0"+min : min
+ }
+ let hrPosition = hr*360/12 + ((min * 360/60)/12) ;
+let minPosition = (min * 360/60) + (sec* 360/60)/60;
+let secPosition = sec * 360/60;
+HOURHAND.style.transform = 'rotate(' + hrPosition + 'deg)';
+MINUTEHAND.style.transform = 'rotate(' + minPosition + 'deg)';
+SECONDHAND.style.transform = 'rotate(' + secPosition + 'deg)';
+function run_the_clock(){
+  
+  
+ var date = new Date();
+ let hr = date.getHours();
+ hr = hr > 12 ? hr - 12 : hr;
+ let min = date.getMinutes();
+ let sec = date.getSeconds()
+
+
+
+ let e = document.querySelector("#clock-angle")
+ e.innerHTML = `<h1>${parseInt(clockAngle(hr, min))}°</h1>`
+ let t = document.querySelector("#time")
+t.innerHTML = `<h1>${hr}:${min<10?"0"+min:min}</h1>`
+ let hrPosition = hr*360/12 + ((min * 360/60)/12) ;
+ let minPosition = (min * 360/60) + (sec* 360/60)/60;
+ let secPosition = sec * 360/60;
+
+ //Then we need to apply these numbers as degrees in the inline   styles for transform on each of the objects.
+ HOURHAND.style.transform = 'rotate(' + hrPosition + 'deg)';
+ MINUTEHAND.style.transform = 'rotate(' + minPosition + 'deg)';
+ SECONDHAND.style.transform = 'rotate(' + secPosition + 'deg)';
+
+ }
+ var interval = setInterval(run_the_clock, 1000);
+
+
+</script>
+
+    <footer style="text-align:center;height:80px;color:white;background-color: #000; width:100%;margin-top:80px">
+All Code
+        <img style="vertical-align:middle;height:80px" src="img/roses.jpg" alt="Bread and Roses">
+      Public Domain
+    </footer>
+
+</body>
+
+</html>
