@@ -111,29 +111,29 @@
     Instead of the conventional backtracking approach, 
     this is a pure, functional implementation with no global state.
     <div class="codey"></div><pre><code class="language-javascript">var {range} = require('range')
-          
+        
 function isThreatened(board, pos) {
   return board.includes(pos) ||
          board.filter((e, i, a) =>
            a.length - i === Math.abs(e - pos)
          ).length
 }
-        
+      
 function nqueens(n, board=[]) {
   let moves = range(n).filter(e=>
     !isThreatened(board, e)
   )
-          
+        
   return board.length === n - 1
     ? moves
-    : moves.map((m, i, a)=>
-        nqueens(n, a.concat([m])).map(sol=>
-          [m].concat(sol)
+    : moves.map(move=>
+        nqueens(n, board.concat([move])).map(sol=>
+          [move].concat(sol)
         )
       ).reduce((acc, cur) => acc.concat(cur), []);
 }
-        
-  console.log(nqueens(8))  
+
+console.log(nqueens(8))
     </code></pre></div>
     Other versions: <a target="_blank" href="https://gist.github.com/seisvelas/944e873f50abe89498b93db62278d2dd">seisvelas@gist.github/nqueens</a>
 <div style="margin-top:50px">
