@@ -169,8 +169,8 @@ console.log(nqueens(8))
   Lorenzo, one of the volunteer mentors at holacode,
   taught us this problem. He said it was given to him during his
   interview at Uber. <p>
-    Below is my solution in Common Lisp. The Scheme version uses a macro so you can enter the time as-is. So <span class="hour"></span>:<span class="minute"></span>
-    instead of the string literal <font color="green">"<span class="hour"></span>:<span class="minute"></span>"</font>
+    Below is my solution in Common Lisp. The Scheme version uses a macro so you can enter the time as-is. So <span class="hora"></span>:<span class="minuta"></span>
+    instead of the string literal <font color="green">"<span class="hora"></span>:<span class="minuta"></span>"</font>
     (like my Python version) or two integers like the version below.
   </p>
   <div class="codey">
@@ -235,11 +235,11 @@ var date = new Date();
  let min = date.getMinutes();
  let sec = date.getSeconds();
 
- var lol = document.getElementsByClassName('hour')
+ var lol = document.getElementsByClassName('hora')
  for (let i = 0; i < lol.length; i++) {
    lol[i].innerHTML = hr>12?hr%12:hr
  }
- lol = document.getElementsByClassName('minute')
+ lol = document.getElementsByClassName('minuta')
  for (let i = 0; i < lol.length; i++) {
    lol[i].innerHTML = min < 10 ? "0"+min : min
  }
