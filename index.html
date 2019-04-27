@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -59,7 +60,7 @@
     stroke: #000;
     stroke-width: 17;
     stroke-miterlimit: 10;
-}target="_blank"
+}
 
 .minute-arm {
     fill: none;
@@ -111,31 +112,31 @@
     Instead of the conventional backtracking approach, 
     this is a pure, functional implementation with no global state.
     <div class="codey"></div><pre><code class="language-javascript">var {range} = require('range')
-        
+          
 function isThreatened(board, pos) {
   return board.includes(pos) ||
          board.filter((e, i, a) =>
            a.length - i === Math.abs(e - pos)
          ).length
 }
-      
+        
 function nqueens(n, board=[]) {
   let moves = range(n).filter(e=>
     !isThreatened(board, e)
   )
-        
+          
   return board.length === n - 1
     ? moves
-    : moves.map(move=>
-        nqueens(n, board.concat([move])).map(sol=>
-          [move].concat(sol)
+    : moves.map((m, i, a)=>
+        nqueens(n, a.concat([m])).map(sol=>
+          [m].concat(sol)
         )
       ).reduce((acc, cur) => acc.concat(cur), []);
 }
-
-console.log(nqueens(8))
+        
+  console.log(nqueens(8))  
     </code></pre></div>
-    Other versions: <a target="_blank" href="https://gist.github.com/seisvelas/944e873f50abe89498b93db62278d2dd">seisvelas@gist.github/nqueens</a>
+    Other versions: <a href="https://gist.github.com/seisvelas/944e873f50abe89498b93db62278d2dd">seisvelas@gist.github/nqueens</a>
 <div style="margin-top:50px">
 <hr>
     <h1>Clock Hands</h1>
@@ -169,8 +170,8 @@ console.log(nqueens(8))
   Lorenzo, one of the volunteer mentors at holacode,
   taught us this problem. He said it was given to him during his
   interview at Uber. <p>
-    Below is my solution in Common Lisp. The Scheme version uses a macro so you can enter the time as-is. So <span class="hora"></span>:<span class="minuta"></span>
-    instead of the string literal <font color="green">"<span class="hora"></span>:<span class="minuta"></span>"</font>
+    Below is my solution in Common Lisp. The Scheme version uses a macro so you can enter the time as-is. So <span class="hour"></span>:<span class="minute"></span>
+    instead of the string literal <font color="green">"<span class="hour"></span>:<span class="minute"></span>"</font>
     (like my Python version) or two integers like the version below.
   </p>
   <div class="codey">
@@ -184,7 +185,7 @@ console.log(nqueens(8))
           
 (write (clock∠ 2 20))
 </code></pre>
-Other versions: <a target="_blank" href="https://gist.github.com/seisvelas/43a62d8e5f392067e98895515e9d9438">seisvelas@gist.github/clock</a>
+Other versions: <a href="https://gist.github.com/seisvelas/43a62d8e5f392067e98895515e9d9438">seisvelas@gist.github/clock</a>
   </div>
 
 
@@ -235,11 +236,11 @@ var date = new Date();
  let min = date.getMinutes();
  let sec = date.getSeconds();
 
- var lol = document.getElementsByClassName('hora')
+ var lol = document.getElementsByClassName('hour')
  for (let i = 0; i < lol.length; i++) {
    lol[i].innerHTML = hr>12?hr%12:hr
  }
- lol = document.getElementsByClassName('minuta')
+ lol = document.getElementsByClassName('minute')
  for (let i = 0; i < lol.length; i++) {
    lol[i].innerHTML = min < 10 ? "0"+min : min
  }
