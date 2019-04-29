@@ -223,7 +223,29 @@ I made up a language called Rosario and implented the interpreter in Lisp. The s
   My next compiler design project is to make a Lisp -> NASM
   compiler!
   
-<!-- CONTINUE HERE -->
+  <div class="codey">
+      <pre><code class="language-lisp">// fib.rose
+// Displays the nth fibonacci number
+
+<- n 8
+
+<- a 0
+<- b 1
+
+// asm style loop (label/condition/goto)
+label @begin
+  <- tmp a
+  <- a b
+  += b tmp
+  += n -1
+  != n 0
+goto @begin
+
+// n is 8, so this will display 21 (the 8th Fibonacci number)
+hi a
+</code></pre>
+Other versions: <a href="https://gist.github.com/seisvelas/9eb7ed03dcd3a95fec1b69194f6e0c68">seisvelas@gist.github/fib</a>
+  </div>
 
 
   </div>
