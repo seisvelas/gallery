@@ -112,6 +112,7 @@
     <div id="anchors"><a href="#queens">8 Queens</a><br>
     <a href="#clockhands">Clock Hands</a><br>
     <a href="#language">Make A Language</a><br>
+    <a href="#fractalFib">Fractal Fibonacci Tree</a><br>
     </div>
     <p>
     Nota Bene: Code here is factored for fun and beauty. Best practices are cast to the wind with gleeful abandon.
@@ -243,45 +244,69 @@ goto @begin
 
 // n is 8, so this will display 21
 hi a
-</code></pre>
-Compiler Source: <a href="https://github.com/seisvelas/rosario">seisvelas@github/rosario</a><p />
-
+</code></pre></p>
+Compiler Source: <a href="https://github.com/seisvelas/rosario">seisvelas@github/rosario</a>
+</div>
 This was my first, small project with <a href="https://beautifulracket.com/appendix/why-lop-why-racket.html">Language Oriented Programming</a> but
 I'd like to create something less trivial. Racket is so powerful for language creation, it feels wrong NOT to, even just for fun.
   <p />
+  <div style="margin-top: 50px"></div>
   <hr>
-  <h1>Fractal Fibonacci Tree</h1>
-  In one of our first toy problem sprints at Holacode, we do a series of Fibonacci series related problems.
-  My absolute favorite solution to the classic version of the problem (find the Nth Fibonacci number) is this one:
+  <h1 id="fractalFib">Fractal Fibonacci Tree</h1>
+  Create a binary tree with a base value of n, such that each branch equals n-1 and n-2. Stop branching when n equals 1 or 0.
+  <p>The sum of the terminal leaves is the nth Fibonacci number.</p>
+
+  <canvas style="width:500px" id="fractal"></canvas>
+ <div style="width:30%;margin: 0 auto;">
   
-  <pre><code class="language-python">fib 0 = 0
-fib 1 = 1
+  <table> <tr> <td style="text-align: right">n = </td> <td><span id="n"></span></td></tr>
+    <tr> <td>f(n) = </td> <td><span id="fn">...</span></td></tr>
+  
+</table> 
+</div>
+<p></p>  <div class="codey">
 
-fib n = fib (n-1) + fib (n-2)
-</code></pre>
-
-This Fibonacci implementation is considered the Hello, World of the Haskell community. Anyway, it's way prettier than the approach
-normally taken the first time someone plays with this problem, which tends to go like
-
-<pre><code class="language-python">
-# This "naive" solution is less pretty
-# than the Haskell version above
-def fib(n, a=0, b=1):
-    return a if n == 0 else fib(n-1, b,a+b)
+  <pre><code class="language-c">#include <stdio.h>
+#include <stdlib.h>
     
-# But it's easier to understand
-# and runs faster.
-</code></pre>
-  
-  In real life, of course, the performance of either algorithm is negligible considering the potential of concurrency
-  and generators to massively optimize the production of Fibonacci numbers. <p />
-  
-  Another cool trait of the Haskell-style solution is that it can be represented by generating a binary tree. For each split, the left
-  branch represents f(n-1) and the right branch f(n-2). If n equals zero or one, cease branching, set the "leaf" to equal n, and then count
-  up all the leaf values. That sum is the nth Fibonacci number. Viz,<p>
-          <canvas style="width:500px" id="fractal"></canvas>
+struct fib_node {
+  int n;
+  struct fib_node *left, *right;
+};
+    
+struct fib_node* fib(int n) {
+  struct fib_node *node;
 
-    </div>
+  node = malloc(sizeof(struct fib_node));
+  node->n = n;
+      
+  if (n && (n - 1)) {
+    node->left  = fib(n-1);
+    node->right = fib(n-2);
+  }
+    
+  return node;               
+}
+    
+int count_leaves(struct fib_node *node) {
+    if (node->left && node->right) {
+        return count_leaves(node->left) + 
+               count_leaves(node->right);
+    }
+    return node->n;
+}
+    
+void main(void) {
+  // displays 13, the 7th fib number
+  printf("%d\n", count_leaves(fib(7)));
+}
+</code></pre>
+Other approaches: <a href="https://gist.github.com/seisvelas/67fe070e9fe3ed731c2abb67b388992f">seisvelas@gist.github/fib</a>
+</div>
+This is basically the same as the classic recursive approach,
+
+
+
 
 
   </div>
@@ -301,10 +326,18 @@ def fib(n, a=0, b=1):
 	var length, divergence, reduction, line_width, start_points = [];
 	
 	init();
-	
+	function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 	function init()
 	{
-        var n = Math.max(12, Math.floor((Math.random()*90)/5))
+        $("#n").text("");
+        $("#fn").text("...");
+        var n = getRandomInt(8, 17)
+        $("#n").text(n + "")
+
 		//filling the canvas white
 		ctx.fillStyle = "white";
 		ctx.fillRect(0, 0, W, H);
@@ -336,11 +369,11 @@ def fib(n, a=0, b=1):
 		ctx.lineWidth = line_width;
 		ctx.stroke();
 		
-		branches(n, 0,1);
+		branches(n, 0,1, n);
 	}
 	
 	//Lets draw the branches now
-	function branches(n, a, b)
+	function branches(n, a, b, original_n)
 	{
 		//reducing line_width and length
 		length = length * reduction;
@@ -378,10 +411,11 @@ def fib(n, a=0, b=1):
 		//recursive call - only if length is more than 2.
 		//Else it will fall in an long loop
 		if(n > 0) {
-            setTimeout(()=>branches(n-1,b, a+b), 50);
+            setTimeout(()=>branches(n-1,b, a+b, original_n), 50);
         }
-        else { 
-        setTimeout(init, 1000);
+        else {
+          $("#fn").text(a + "")
+        setTimeout(init, 2000);
         }
 	}
 	
