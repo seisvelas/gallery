@@ -497,9 +497,9 @@ function run_the_clock(){
 
 
  let e = document.querySelector("#clock-angle")
- e.innerHTML = `<h1>${parseInt(clockAngle(hr, min))}°</h1>`
+ e.innerHTML = `<h1>${parseInt(clockAngle(hr, sec))}°</h1>`
  let t = document.querySelector("#time")
-t.innerHTML = `<h1>${hr}:${min<10?"0"+min:min}</h1>`
+t.innerHTML = `<h1>${hr}:${min<10?"0"+min:min}:${sec}</h1>`
  let hrPosition = hr*360/12 + ((min * 360/60)/12) ;
  let minPosition = (min * 360/60) + (sec* 360/60)/60;
  let secPosition = sec * 360/60;
