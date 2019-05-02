@@ -191,21 +191,25 @@ function nqueens(n, board=[]) {
   Lorenzo, one of the volunteer mentors at holacode,
   taught us this problem. He said it was given to him during his
   interview at Uber. <p>
-    Below is my solution in Common Lisp. The Scheme version uses a macro so you can enter the time as-is. So <span class="hour"></span>:<span class="minute"></span>
+    Below is my solution in Elixir. The Scheme version uses a macro so you can enter the time as-is. So <span class="hour"></span>:<span class="minute"></span>
     instead of the string literal <font color="green">"<span class="hour"></span>:<span class="minute"></span>"</font>
-    (like my Python version) or two integers like the version below.
+    (like my Python version) or three integers like the version below.
   </p>
   <div class="codey">
-      <pre><code class="language-python">def hour_pos(hour, minute):
-  return 5 * ((hour % 12) + (minute / 60))
-          
-def clock_angle(hour, minute, sec):
-  angle = abs(sec - hour_pos(hour, minute))
-  return 6 * min(angle, 360 - angle)
+      <pre><code class="language-python">defmodule ClockAngle do
+  def pos(hour, minute) do
+    5 * (rem(hour, 12) + minute / 60)
+  end
+  def angle(hour, minute, second) do
+    hour_pos = pos(hour, minute)
+    angle = abs(6 * (second - hour_pos))
+    inner_angle = min(angle, 360 - angle)
 
+    inner_angle
+  end
+end
 
-         # h  m   s  
-clock_angle(3, 15, 15)
+IO.puts ClockAngle.angle(2, 20, 20)
 </code></pre>
 Other versions: <a href="https://gist.github.com/seisvelas/43a62d8e5f392067e98895515e9d9438">seisvelas@gist.github/clock</a>
   </div>
@@ -444,8 +448,8 @@ var doc = document.getElementsByTagName('code')[1]
  console.log(doc_code)
  var new_html = []
 for (let i = 0; i < doc_code.length; i++) {
-  if (doc_code[i].includes("clock_angle") && !doc_code[i].includes("def")) {
-    new_html.push(`clock_angle(${hro}, ${mino}, ${seco})`)
+  if (doc_code[i].includes("puts")) {
+    new_html.push(`IO.puts ClockAngle.angle(${hro}, ${mino}, ${seco})`)
   } else {
     new_html.push(doc_code[i])
   }
