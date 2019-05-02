@@ -196,15 +196,16 @@ function nqueens(n, board=[]) {
     (like my Python version) or two integers like the version below.
   </p>
   <div class="codey">
-      <pre><code class="language-lisp">(defmacro hour->min (hour @ min)
-  `(* 5 (+ (mod hour 12) 
-        (/ min 60))))
+      <pre><code class="language-lisp">let hourPos = (hour, min) =>
+  5 *  ((hour % 12) + (min / 60))
           
-(defun clock∠ (hour min)
-  (let ((° (abs (- min (hour->min hour @ min)))))
-    (* 6 (min ° (- 360 °)))))
-          
-(write (clock∠ 2 20))
+let clockAngle = (hour, min, sec) => {
+  let angle = Math.abs(sec - hourPos(hour, min))
+  return 6 * Math.min(angle, 360 - angle)
+}
+
+        // h  m  s  
+clockAngle(2, 0, 10)
 </code></pre>
 Other versions: <a href="https://gist.github.com/seisvelas/43a62d8e5f392067e98895515e9d9438">seisvelas@gist.github/clock</a>
   </div>
@@ -443,8 +444,8 @@ var doc = document.getElementsByTagName('code')[1]
  console.log(doc_code)
  var new_html = []
 for (let i = 0; i < doc_code.length; i++) {
-  if (doc_code[i].includes("write")) {
-    new_html.push(`(write (clock∠ ${hro} ${mino}))`)
+  if (doc_code[i].includes("clockAngle") && !doc_code[i].includes("let")) {
+    new_html.push(`clockAngle(${hro}, ${mino}, ${seco})`)
   } else {
     new_html.push(doc_code[i])
   }
